@@ -36,13 +36,13 @@ QLabel#SectionTitle {
     font-weight: 500;
 }
 
-QFrame#GroupPanel {
+QFrame#GroupPanel {    
     background-color: #0c110e;
     border: 1px solid #182620;
     border-radius: 16px;
 }
 
-QFrame#FieldCard {
+QFrame#FieldCard {    
     background-color: #0e1512;
     border: 1px solid #1c2e23;
     border-radius: 14px;
@@ -133,6 +133,7 @@ QPushButton#SecondaryButton {
     font-weight: 500;
     padding: 11px;
 }
+
 QPushButton#SecondaryButton:hover {
     background-color: #2a5286;
 }
@@ -145,6 +146,7 @@ QPushButton#SecondaryOutlineButton {
     font-size: 12px;
     padding: 9px;
 }
+
 QPushButton#SecondaryOutlineButton:hover {
     background-color: #12241a;
 }
@@ -185,6 +187,7 @@ QRadioButton#StyleRadio::indicator {
     border-radius: 7px;
     border: 1.5px solid #3a5245;
 }
+
 QRadioButton#StyleRadio::indicator:checked {
     border: 1.5px solid #4ade80;
     background-color: #4ade80;

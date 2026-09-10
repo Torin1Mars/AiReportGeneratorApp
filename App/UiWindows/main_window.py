@@ -11,6 +11,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from App.SupportingData.InitalSettings import *
 from App.UiElements.file_input_row import FileInputRow
 from App.WindowsLogic.main_window_logic import MainWindowLogic
 from App.UiWindows.settings_window import SettingsWindow
@@ -21,26 +22,22 @@ class MainWindow(QWidget):
         super().__init__()
         self.logic = MainWindowLogic()
         self._drag_position = QPoint()
-        #TODO fix main window size here:
+        self._setup_screen()
 
+        self._build_ui()
 
+    def _setup_screen(self):
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
-        self._resize_to_half_screen()
-        self._build_ui()
+        #Window size
+        self.setFixedSize(MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT)
 
-    def _resize_to_half_screen(self):
-        # Window always takes ~50% of the available screen,
-        # scaling width and height by the same factor to keep proportions.
+        #Starting position
         screen_geometry = QApplication.primaryScreen().availableGeometry()
-        width = int(screen_geometry.width() * 0.5)
-        height = int(screen_geometry.height() * 0.5)
-        self.setFixedSize(width, height)
-
-        x = screen_geometry.x() + (screen_geometry.width() - width) // 2
-        y = screen_geometry.y() + (screen_geometry.height() - height) // 2
-        self.move(x, y)
+        start_width = int((screen_geometry.width()-MAIN_WINDOW_WIDTH) * 0.5)
+        start_height = int((screen_geometry.height()-MAIN_WINDOW_HEIGHT) * 0.5)
+        self.move(start_width, start_height)
 
     def _build_ui(self):
         outer_layout = QVBoxLayout(self)
@@ -135,6 +132,8 @@ class MainWindow(QWidget):
         layout = QVBoxLayout(group)
         layout.setContentsMargins(12, 12, 12, 12)
 
+        #TODO delete from here one output border in ui design
+
         card = QFrame()
         card.setObjectName("FieldCard")
         card_layout = QVBoxLayout(card)
@@ -147,7 +146,7 @@ class MainWindow(QWidget):
         number_badge.setFixedSize(26, 26)
         number_badge.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        title_label = QLabel("Generation setup")
+        title_label = QLabel("Report generation setup:")
         title_label.setObjectName("FieldTitle")
 
         self.generation_clear_button = QPushButton("\u2715")
@@ -166,7 +165,7 @@ class MainWindow(QWidget):
 
         self.language_combo = QComboBox()
         self.language_combo.setObjectName("LanguageCombo")
-        self.language_combo.addItems(["Ukrainian", "English", "Polish", "German"])
+        self.language_combo.addItems(FINAL_REPORT_LANGUAGES_VARIANTS)
 
         self.generation_status_label = QLabel("Status: not started")
         self.generation_status_label.setObjectName("StatusLabel")

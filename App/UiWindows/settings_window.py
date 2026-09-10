@@ -8,9 +8,9 @@ from PyQt6.QtWidgets import (
     QLineEdit,
     QPushButton,
     QRadioButton,
-    QVBoxLayout,
+    QVBoxLayout, QApplication,
 )
-
+from App.SupportingData.InitalSettings import *
 from App.WindowsLogic.settings_window_logic import SettingsWindowLogic
 
 class SettingsWindow(QDialog):
@@ -18,13 +18,23 @@ class SettingsWindow(QDialog):
         super().__init__(parent)
         self.logic = SettingsWindowLogic()
         self._drag_position = QPoint()
+        self._setup_screen()
 
+        self._build_ui()
+
+    def _setup_screen(self):
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setModal(True)
-        self.setFixedSize(300, 450)
 
-        self._build_ui()
+        #Window size
+        self.setFixedSize(SETTINGS_WINDOW_WIDTH, SETTINGS_WINDOW_HEIGHT)
+
+        #Starting position
+        screen_geometry = QApplication.primaryScreen().availableGeometry()
+        start_width = int((screen_geometry.width()-SETTINGS_WINDOW_WIDTH) * 0.5)
+        start_height = int((screen_geometry.height()-SETTINGS_WINDOW_HEIGHT) * 0.5)
+        self.move(start_width, start_height)
 
     def _build_ui(self):
         outer_layout = QVBoxLayout(self)
