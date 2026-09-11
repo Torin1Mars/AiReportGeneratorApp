@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import (
     QRadioButton,
     QVBoxLayout, QApplication,
 )
-from App.SupportingData.InitalSettings import *
+from App.SupportingData.initalSettings import *
 from App.WindowsLogic.settings_window_logic import SettingsWindowLogic
 
 class SettingsWindow(QDialog):

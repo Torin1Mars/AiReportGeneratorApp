@@ -1,3 +1,5 @@
+from tokenize import String
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QFileDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget, QFrame
 
@@ -6,30 +8,34 @@ class FileInputRow(QWidget):
     """Reusable row for a single Preparation field: number badge, title,
     browse/add button, clear button, selected-file list and status label."""
 
-    def __init__(self, number: str, label_text: str, button_text: str,
+    def __init__(self, number: str, label_text: str,
                  allow_multiple: bool = False, parent=None):
         super().__init__(parent)
         self.allow_multiple = allow_multiple
         self.selected_files: list[str] = []
 
+        self._build_content_ui(number, label_text)
+
+        #TODO Need to implement here storaging containers for selected files
+
+
+    def _build_content_ui(self, rowNumber: str, labelText: str):
         self.setObjectName("FieldCard")
 
         outer_layout = QVBoxLayout(self)
-        outer_layout.setContentsMargins(16, 12, 16, 12)
-        outer_layout.setSpacing(8)
+        outer_layout.setContentsMargins(16, 5, 16, 5)
 
         top_row = QHBoxLayout()
-        top_row.setSpacing(14)
 
-        number_badge = QLabel(number)
+        number_badge = QLabel(rowNumber)
         number_badge.setObjectName("NumberBadge")
         number_badge.setFixedSize(26, 26)
         number_badge.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        title_label = QLabel(label_text)
+        title_label = QLabel(labelText)
         title_label.setObjectName("FieldTitle")
 
-        self.browse_button = QPushButton(button_text)
+        self.browse_button = QPushButton("Add file")
         self.browse_button.setObjectName("BrowseButton")
         self.browse_button.clicked.connect(self.handle_browse_clicked)
 
@@ -44,7 +50,6 @@ class FileInputRow(QWidget):
         top_row.addWidget(self.clear_button)
 
         bottom_row = QHBoxLayout()
-        bottom_row.setContentsMargins(40, 0, 0, 0)
 
         self.files_label = QLabel("No files selected")
         self.files_label.setObjectName("FilesLabel")
@@ -55,8 +60,16 @@ class FileInputRow(QWidget):
         bottom_row.addWidget(self.files_label, 1)
         bottom_row.addWidget(self.status_label)
 
+        # divider line
+        field_divider = QFrame()
+        field_divider.setObjectName("FieldDivider")
+        field_divider.setFrameShape(QFrame.Shape.HLine)
+
         outer_layout.addLayout(top_row)
+        outer_layout.addSpacing(20)
         outer_layout.addLayout(bottom_row)
+        outer_layout.addWidget(field_divider)
+
 
     def handle_browse_clicked(self):
         if self.allow_multiple:
@@ -69,6 +82,7 @@ class FileInputRow(QWidget):
             self.selected_files = files
             names = ", ".join(path.split("/")[-1] for path in files)
             self.files_label.setText(names)
+
 
     def handle_clear_clicked(self):
         self.selected_files = []

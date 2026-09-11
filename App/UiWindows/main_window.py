@@ -11,7 +11,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from App.SupportingData.InitalSettings import *
+from App.SupportingData.initalSettings import *
 from App.UiElements.file_input_row import FileInputRow
 from App.WindowsLogic.main_window_logic import MainWindowLogic
 from App.UiWindows.settings_window import SettingsWindow
@@ -41,7 +41,7 @@ class MainWindow(QWidget):
 
     def _build_ui(self):
         outer_layout = QVBoxLayout(self)
-        outer_layout.setContentsMargins(0, 0, 0, 0)
+        outer_layout.setContentsMargins(5,5,5,5)
 
         container = QFrame()
         container.setObjectName("MainContainer")
@@ -110,9 +110,9 @@ class MainWindow(QWidget):
         layout.setContentsMargins(12, 12, 12, 12)
         layout.setSpacing(10)
 
-        self.template_row = FileInputRow("1", "Report template", "Browse", allow_multiple=False)
-        self.reports_row = FileInputRow("2", "User reports", "Add files", allow_multiple=True)
-        self.explanations_row = FileInputRow("3", "Explanation docs", "Add files", allow_multiple=True)
+        self.template_row = FileInputRow("1", "Report template" , allow_multiple=False)
+        self.reports_row = FileInputRow("2", "User reports", allow_multiple=True)
+        self.explanations_row = FileInputRow("3", "Explanation docs", allow_multiple=True)
 
         layout.addWidget(self.template_row)
         layout.addWidget(self.reports_row)
@@ -131,12 +131,6 @@ class MainWindow(QWidget):
 
         layout = QVBoxLayout(group)
         layout.setContentsMargins(12, 12, 12, 12)
-
-        #TODO delete from here one output border in ui design
-
-        card = QFrame()
-        card.setObjectName("FieldCard")
-        card_layout = QVBoxLayout(card)
 
         top_row = QHBoxLayout()
         top_row.setSpacing(14)
@@ -171,12 +165,11 @@ class MainWindow(QWidget):
         self.generation_status_label.setObjectName("StatusLabel")
         self.generation_status_label.setAlignment(Qt.AlignmentFlag.AlignRight)
 
-        card_layout.addLayout(top_row)
-        card_layout.addWidget(self.prompt_input)
-        card_layout.addWidget(self.language_combo)
-        card_layout.addWidget(self.generation_status_label)
+        layout.addLayout(top_row)
+        layout.addWidget(self.prompt_input)
+        layout.addWidget(self.language_combo)
+        layout.addWidget(self.generation_status_label)
 
-        layout.addWidget(card)
         return group
 
     def handle_settings_clicked(self):

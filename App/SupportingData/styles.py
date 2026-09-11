@@ -26,6 +26,7 @@ QPushButton#IconButton {
     border-radius: 9px;
     color: #8fae9c;
 }
+
 QPushButton#IconButton:hover {
     background-color: #12241a;
 }
@@ -38,14 +39,18 @@ QLabel#SectionTitle {
 
 QFrame#GroupPanel {    
     background-color: #0c110e;
-    border: 1px solid #182620;
+    border: 2px solid #182620;
     border-radius: 16px;
 }
 
 QFrame#FieldCard {    
-    background-color: #0e1512;
-    border: 1px solid #1c2e23;
-    border-radius: 14px;
+    background-color: #0e1512;       
+}
+
+QFrame#FieldDivider {
+    background-color: #182620;
+    border: none;
+    max-height: 3px;
 }
 
 QLabel#NumberBadge {
@@ -192,4 +197,5 @@ QRadioButton#StyleRadio::indicator:checked {
     border: 1.5px solid #4ade80;
     background-color: #4ade80;
 }
+
 """
