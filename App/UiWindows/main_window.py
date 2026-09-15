@@ -13,6 +13,7 @@ from PyQt6.QtWidgets import (
 
 from App.SupportingData.initalSettings import *
 from App.UiElements.file_input_row import FileInputRow
+from App.WindowsLogic.appLogicController import AppLogicController
 from App.WindowsLogic.main_window_logic import MainWindowLogic
 from App.UiWindows.settings_window import SettingsWindow
 
@@ -23,6 +24,7 @@ class MainWindow(QWidget):
         self.logic = MainWindowLogic()
         self._drag_position = QPoint()
         self._setup_screen()
+        self.logicController = AppLogicController()
 
         self._build_ui()
 
@@ -120,7 +122,8 @@ class MainWindow(QWidget):
 
         prepare_button = QPushButton("Prepare data")
         prepare_button.setObjectName("SecondaryButton")
-        # Prepare data button intentionally left without a handler.
+
+        prepare_button.clicked.connect(self._handePrepareBtnClicked)
         layout.addWidget(prepare_button)
 
         return group
@@ -146,7 +149,7 @@ class MainWindow(QWidget):
         self.generation_clear_button = QPushButton("\u2715")
         self.generation_clear_button.setObjectName("ClearButton")
         self.generation_clear_button.setFixedSize(30, 30)
-        self.generation_clear_button.clicked.connect(self.handle_generation_clear_clicked)
+        #self.generation_clear_button.clicked.connect(self.handle_generation_clear_clicked)
 
         top_row.addWidget(number_badge)
         top_row.addWidget(title_label, 1)
@@ -193,3 +196,7 @@ class MainWindow(QWidget):
         if event.buttons() == Qt.MouseButton.LeftButton:
             self.move(event.globalPosition().toPoint() - self._drag_position)
             event.accept()
+
+    def _handePrepareBtnClicked(self):
+        self.logicController.runPreperationStage("", ["vdvdf","fdvd"],  ["fdv","fdvd"])
+

@@ -16,8 +16,6 @@ class FileInputRow(QWidget):
 
         self._build_content_ui(number, label_text)
 
-        #TODO Need to implement here storaging containers for selected files
-
 
     def _build_content_ui(self, rowNumber: str, labelText: str):
         self.setObjectName("FieldCard")

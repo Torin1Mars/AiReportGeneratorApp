@@ -1,3 +1,6 @@
+from openai import OpenAI
+
+from App.SupportingData.initalSettings import CHAT_GPT_KEY
 
 
 class ChatGptRequestModule:
@@ -7,14 +10,37 @@ class ChatGptRequestModule:
         self.currentApiKey = validApiKey
         self.currentModelName = modelName
 
+        self.aiClient = OpenAI(api_key=CHAT_GPT_KEY)
+        #self.aiClient.api_key = CHAT_GPT_KEY
 
     def run_preparation_query(self, initialPrompt:str, rawUserFeaReports:list[str],
                               rawAdditionalDocuments:list[str], allowingRequestTime:int):
-        #TODO later
-        pass
+        self._sendAiRequest("Hi to you !")
 
 
     def run_generating_report_query(self,initialPrompt:str, template:str,
-                                    processedUserData:list[str], allowingRequestTime:int):
+                                    processedUserData:str, allowingRequestTime:int):
         #TODO later
         pass
+
+    def _sendAiRequest(self, userRequest:str)->str:
+        try:
+            print("Request sended")
+            # Send the question to the ChatCompletions endpoint
+            response = self.aiClient.chat.completions.create(
+                model = self.currentModelName,
+                messages=[
+                    {"role": "user", "content": userRequest}
+                ]
+            )
+
+            # TODO need to extract Ai Answer from here
+
+            return response.choices[0].message.content
+
+
+        except Exception as e:
+            print(e)
+
+
+
