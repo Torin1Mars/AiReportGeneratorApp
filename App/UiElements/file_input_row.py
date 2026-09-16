@@ -76,6 +76,7 @@ class FileInputRow(QWidget):
             file_path, _ = QFileDialog.getOpenFileName(self, "Select file")
             files = [file_path] if file_path else []
 
+
         if files:
             self.selected_files = files
             names = ", ".join(path.split("/")[-1] for path in files)

@@ -13,19 +13,20 @@ from PyQt6.QtWidgets import (
 
 from App.SupportingData.initalSettings import *
 from App.UiElements.file_input_row import FileInputRow
-from App.WindowsLogic.appLogicController import AppLogicController
 from App.WindowsLogic.main_window_logic import MainWindowLogic
 from App.UiWindows.settings_window import SettingsWindow
-
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.logic = MainWindowLogic()
+
+        #Logic
+        #With using lateinit
+        self.mainWindowLogic = MainWindowLogic()
+
+        #Ui
         self._drag_position = QPoint()
         self._setup_screen()
-        self.logicController = AppLogicController()
-
         self._build_ui()
 
     def _setup_screen(self):
@@ -43,7 +44,7 @@ class MainWindow(QWidget):
 
     def _build_ui(self):
         outer_layout = QVBoxLayout(self)
-        outer_layout.setContentsMargins(5,5,5,5)
+        outer_layout.setContentsMargins(5, 5, 5, 5)
 
         container = QFrame()
         container.setObjectName("MainContainer")
@@ -198,5 +199,10 @@ class MainWindow(QWidget):
             event.accept()
 
     def _handePrepareBtnClicked(self):
-        self.logicController.runPreperationStage("", ["vdvdf","fdvd"],  ["fdv","fdvd"])
+        #Connecting Ui to Bc logic
+        self.mainWindowLogic.set_new_inputs( self.template_row.selected_files,
+                                             self.reports_row.selected_files,
+                                             self.explanations_row.selected_files)
+
+        self.mainWindowLogic.runPreperationStage(allowingDelay=60)
 
