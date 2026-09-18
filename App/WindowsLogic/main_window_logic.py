@@ -57,6 +57,8 @@ class MainWindowLogic:
     async def _inputFilesLoading(self) -> list[list[str]]:
         convertedData = []
 
+        #Continue to work here :
+
         convertedTemplate = self.inputFilesLoader.loadFiles(self.templateFile)
         convertedFeaReports = self.inputFilesLoader.loadFiles(self.reportsFiles)
         convertedExplanationDocuments = self.inputFilesLoader.loadFiles(self.explanationDocumentsPaths)
