@@ -1,31 +1,28 @@
 import json
+import sys
+
 from docx import Document
 from docx.table import Table
 from docx.text.paragraph import Paragraph
 from docx.oxml.ns import qn
 
 class InputFilesLoader:
-    def __init__(self):
-        #Initially should be in docs format
-        self.userTemplateFile = ""
 
-        #Initially should be as Ansys html docs format
-        self.userReportsFiles = ""
+    def loadFiles(self, filesPaths:list[str])->list[list[str]]:
 
-        #Can be any format
-        self.userExplanationFiles = ""
-
-
-    def loadUserTemplateFile(self, filePath:str)->None:
         try :
-            self.userTemplateCovertedFile = filePath
+            convertedFiles = []
+
+            for filePath in filesPaths:
+                convertedFiles.append(self.convert_docx_to_json(filePath))
+            return convertedFiles
 
         except Exception as e:
             print(e)
 
 
-    def convert_docx_to_json(self, file_path):
-        # Load a .docx from file_path and return a JSON-serializable dict
+    def convert_docx_to_json(self, file_path)->list[str]:
+        # Load a .docx from file_path and return a JSON-serializable
         doc = Document(file_path)
 
         content = []
@@ -36,10 +33,7 @@ class InputFilesLoader:
             elif child.tag == qn("w:tbl"):
                 content.append(self._table_to_dict(Table(child, doc)))
             # sectPr and other structural elements are skipped
-
-        return {
-            "content": content,
-            }
+        return content
 
     def _run_to_dict(self, run):
         return {
@@ -81,7 +75,6 @@ Load a .docx file by path and convert its content into a JSON-serializable
 structure: paragraphs and tables (in document order).
 """
 
-
 '''
 def _core_properties_to_dict(doc):
     props = doc.core_properties
@@ -96,7 +89,9 @@ def _core_properties_to_dict(doc):
         "modified": props.modified.isoformat() if props.modified else None,
         "last_modified_by": props.last_modified_by,
         "revision": props.revision,
-    }'''
+    }
+
+'''
 
 '''
 def main():

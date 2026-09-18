@@ -1,6 +1,6 @@
 from openai import OpenAI
 
-from App.AiModule.inputFilesLoader import InputFilesLoader
+#from App.AiModule.inputFilesLoader import InputFilesLoader
 
 
 class ChatGptRequestModule:
@@ -13,14 +13,7 @@ class ChatGptRequestModule:
 
         self.aiClient = OpenAI(api_key = validApiKey)
 
-        #Data converter
-        self.dataLoader = InputFilesLoader
-
-
-
-
-    def run_preparation_query(self, initialPrompt:str, rawUserFeaReports:list[str],
-                              rawAdditionalDocuments:list[str], allowingRequestTime:int):
+    def run_preparation_query(self, convertedFiles:str, allowingTime:int):
         self._sendAiRequest("Hi to you !")
 
 
