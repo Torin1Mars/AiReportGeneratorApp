@@ -2,12 +2,12 @@ import asyncio
 from tkinter import messagebox
 
 from App.AiModule.chatGptRequestModule import ChatGptRequestModule
+from App.AiModule.docx_to_json import docx_to_plain_json
 from App.AiModule.inputFilesLoader import InputFilesLoader
-from App.SupportingData.initalSettings import CHAT_GPT_KEY, CHAT_GPT_MODEL_NAME
+from App.SupportingData.initalSettings import CHAT_GPT_KEY, CHAT_GPT_MODEL_NAME, CHAT_GPT_PREPARATION_TIME
 
 
 class MainWindowLogic:
-
     def __init__(self):
         self.templateFile = None
         self.reportsFiles = None
@@ -46,7 +46,7 @@ class MainWindowLogic:
         pass
 
     def _runPreparation(self, convertedInputs:list[list[str]]):
-        self.requestAiModule.run_preparation_query(convertedInputs)
+        self.requestAiModule.run_preparation_query(convertedInputs, CHAT_GPT_PREPARATION_TIME)
 
     def _runGeneration(self, basicPrompt:str, templateFile:str, preparedData:str, allowingTime:int):
         self.requestAiModule.run_generating_report_query(basicPrompt, templateFile, preparedData, allowingTime)
@@ -55,9 +55,11 @@ class MainWindowLogic:
         await self._inputFilesLoading()
 
     async def _inputFilesLoading(self) -> list[list[str]]:
-        convertedData = []
 
-        #Continue to work here :
+        convertedData = []
+        path = self.templateFile
+
+        convertedData = docx_to_plain_json(path)
 
         convertedTemplate = self.inputFilesLoader.loadFiles(self.templateFile)
         convertedFeaReports = self.inputFilesLoader.loadFiles(self.reportsFiles)
