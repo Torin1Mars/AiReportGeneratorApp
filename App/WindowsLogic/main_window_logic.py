@@ -2,7 +2,6 @@ import asyncio
 from tkinter import messagebox
 
 from App.AiModule.chatGptRequestModule import ChatGptRequestModule
-from App.AiModule.docx_to_json import docx_to_plain_json
 from App.AiModule.inputFilesLoader import InputFilesLoader
 from App.SupportingData.initalSettings import CHAT_GPT_KEY, CHAT_GPT_MODEL_NAME, CHAT_GPT_PREPARATION_TIME
 
@@ -11,7 +10,7 @@ class MainWindowLogic:
     def __init__(self):
         self.templateFile = None
         self.reportsFiles = None
-        self.explanationDocumentsPaths = None
+        self.explanationDocumentsFiles = None
 
         self.inputFilesLoader = InputFilesLoader()
         self.requestAiModule = ChatGptRequestModule(CHAT_GPT_KEY, CHAT_GPT_MODEL_NAME)
@@ -19,7 +18,7 @@ class MainWindowLogic:
     def set_new_inputs (self, templateFile:list[str] = None, reportsFiles:list[str] = None, explanationDocumentsPaths:list[str]= None ):
         self.templateFile = templateFile
         self.reportsFiles = reportsFiles
-        self.explanationDocumentsPaths = explanationDocumentsPaths
+        self.explanationDocumentsFiles = explanationDocumentsPaths
 
     def runPreperationStage(self, allowingDelay:int):
 
@@ -59,13 +58,9 @@ class MainWindowLogic:
         convertedData = []
         path = self.templateFile
 
-        convertedData = docx_to_plain_json(path)
+        self.inputFilesLoader.loadInputFiles(self.templateFile, self.reportsFiles, self.explanationDocumentsFiles)
 
-        convertedTemplate = self.inputFilesLoader.loadFiles(self.templateFile)
-        convertedFeaReports = self.inputFilesLoader.loadFiles(self.reportsFiles)
-        convertedExplanationDocuments = self.inputFilesLoader.loadFiles(self.explanationDocumentsPaths)
-
-        convertedData.append([convertedTemplate, convertedFeaReports, convertedExplanationDocuments])
+        #convertedData.append([convertedTemplate, convertedFeaReports, convertedExplanation])
         return convertedData
 
 
