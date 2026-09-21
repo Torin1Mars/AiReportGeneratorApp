@@ -2,9 +2,8 @@ import asyncio
 from tkinter import messagebox
 
 from App.AiModule.chatGptRequestModule import ChatGptRequestModule
-from App.AiModule.inputFilesLoader import InputFilesLoader
+from App.domain.inputFilesLoader import InputFilesLoader
 from App.SupportingData.initalSettings import CHAT_GPT_KEY, CHAT_GPT_MODEL_NAME, CHAT_GPT_PREPARATION_TIME
-
 
 class MainWindowLogic:
     def __init__(self):
@@ -56,7 +55,6 @@ class MainWindowLogic:
     async def _inputFilesLoading(self) -> list[list[str]]:
 
         convertedData = []
-        path = self.templateFile
 
         self.inputFilesLoader.loadInputFiles(self.templateFile, self.reportsFiles, self.explanationDocumentsFiles)
 
@@ -66,6 +64,7 @@ class MainWindowLogic:
 
     def _showInformationMsg(self, msgText:str):
         messagebox.showwarning("Input Error!", msgText)
+
 
     def _showErrornMsg(self, msgText:str):
         messagebox.showerror("Files Error!", msgText)
