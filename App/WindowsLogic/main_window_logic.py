@@ -61,10 +61,8 @@ class MainWindowLogic:
         #convertedData.append([convertedTemplate, convertedFeaReports, convertedExplanation])
         return convertedData
 
-
     def _showInformationMsg(self, msgText:str):
         messagebox.showwarning("Input Error!", msgText)
-
 
     def _showErrornMsg(self, msgText:str):
         messagebox.showerror("Files Error!", msgText)
