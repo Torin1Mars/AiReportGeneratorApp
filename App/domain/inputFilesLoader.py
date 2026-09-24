@@ -1,14 +1,14 @@
+import json
+from pathlib import Path
 from typing import Any
 
 from App.domain.feaReportsConverter import FeaReportsConverter
 from App.domain.wordDocumentsConverter import WordDocConverter
 
-
-
-
-
 class InputFilesLoader:
     def __init__(self):
+        self.convertedReports:dict = {}
+
         self.wordDocConverter = WordDocConverter()
         self.feaReportsConverter = FeaReportsConverter()
 
@@ -16,7 +16,7 @@ class InputFilesLoader:
                         reports_filesPaths:list[list[str]],
                         explanation_filesPaths:list[list[str]]):
 
-        if template_filesPaths:
+        '''if template_filesPaths:
             try:
                 #convertedTemplate = self._unpackTemplateDocs(template_filesPaths)
                 pass
@@ -30,7 +30,7 @@ class InputFilesLoader:
                 self._unpackReportsDocs(reports_filesPaths)
             except Exception as e:
                 print("Couldn't load report docs")
-                print(e)
+                print(e)'''
 
         if explanation_filesPaths:
             try:
@@ -45,11 +45,37 @@ class InputFilesLoader:
         return  self.wordDocConverter.docx_to_json(path)
 
 
-    def _unpackReportsDocs(self, filesPaths):
-        self.feaReportsConverter.readFeaReports(filesPaths)
+    def _unpackReportsDocs(self, filesPaths)->None:
+        self.convertedReports = self.feaReportsConverter.readFeaReports(filesPaths)
+
+
+    def _unpackExplanationDocs(self, filesPaths:list[str])->object:
+        readedReports = {}
+
+        #TODO Set up here need to get propper json object output and structure
+
+        try:
+            for path in filesPaths:
+                number = 1
+
+                with open(path, "r", encoding="utf-8") as file:
+                    raw_file_data = file.read()
+                    file_name = Path(path).stem
+
+                    if raw_file_data:
+                        data = {
+                            "filename": file_name,
+                            "content": raw_file_data
+                        }
+
+                        readedReports[file_name] = raw_file_data
+                        number +=1
 
 
 
-    def _unpackExplanationDocs(self, filesPaths):
-        pass
+        except Exception as e:
+            print(e)
 
+        jsonOutput = json.dumps(readedReports, indent=4,ensure_ascii=False)
+
+        return jsonOutput

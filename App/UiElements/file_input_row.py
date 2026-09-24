@@ -68,14 +68,12 @@ class FileInputRow(QWidget):
         outer_layout.addLayout(bottom_row)
         outer_layout.addWidget(field_divider)
 
-
     def handle_browse_clicked(self):
         if self.allow_multiple:
             files, _ = QFileDialog.getOpenFileNames(self, "Select files")
         else:
             file_path, _ = QFileDialog.getOpenFileName(self, "Select file")
             files = [file_path] if file_path else []
-
 
         if files:
             self.selected_files = files
