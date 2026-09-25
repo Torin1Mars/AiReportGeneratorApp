@@ -2,7 +2,7 @@ import asyncio
 from tkinter import messagebox
 
 from App.AiModule.chatGptRequestModule import ChatGptRequestModule
-from App.domain.inputFilesLoader import InputFilesLoader
+from App.domain.InputFilesLoader import InputFilesLoader
 from App.SupportingData.initalSettings import CHAT_GPT_KEY, CHAT_GPT_MODEL_NAME, CHAT_GPT_PREPARATION_TIME
 
 class MainWindowLogic:

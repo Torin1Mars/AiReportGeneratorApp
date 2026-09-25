@@ -2,30 +2,34 @@ import json
 from pathlib import Path
 from typing import Any
 
+from App.domain.TemplateLoader import TemplateLoader
 from App.domain.feaReportsConverter import FeaReportsConverter
-from App.domain.wordDocumentsConverter import WordDocConverter
 
 class InputFilesLoader:
     def __init__(self):
-        self.convertedReports:dict = {}
+        self.convertedTemplate:object
+        self.convertedReports:object
 
-        self.wordDocConverter = WordDocConverter()
         self.feaReportsConverter = FeaReportsConverter()
+        self.templateLoader = TemplateLoader()
 
-    def loadInputFiles (self, template_filesPaths:list[list[str]],
+
+    def loadInputFiles (self, template_filePath:str,
                         reports_filesPaths:list[list[str]],
                         explanation_filesPaths:list[list[str]]):
 
-        '''if template_filesPaths:
+        if template_filePath:
             try:
-                #convertedTemplate = self._unpackTemplateDocs(template_filesPaths)
-                pass
+
+                #TODO its need to set up propper template file loader
+                template = self.templateLoader.unpackTemplateFile(template_filePath)
+                print(template)
 
             except Exception as e:
                 print("Couldn't load template doc")
                 print(e)
 
-        if reports_filesPaths:
+        '''if reports_filesPaths:
             try:
                 self._unpackReportsDocs(reports_filesPaths)
             except Exception as e:
@@ -34,25 +38,24 @@ class InputFilesLoader:
 
         if explanation_filesPaths:
             try:
-                self._unpackExplanationDocs(explanation_filesPaths)
+                self.convertedReports = self._unpackExplanationDocs(explanation_filesPaths)
             except Exception as e:
                 print("Couldn't load report docs")
                 print(e)
 
 
-    def _unpackTemplateDocs(self, filesPaths:list[list[str]])->dict[str, Any]:
-        path = filesPaths[0]
-        return  self.wordDocConverter.docx_to_json(path)
+    def _unpackTemplateDoc(self, filePath:str)->object:
+        convertedTemplate = self.templateLoader.unpackTemplateFile(filePath)
+        return convertedTemplate
 
 
-    def _unpackReportsDocs(self, filesPaths)->None:
-        self.convertedReports = self.feaReportsConverter.readFeaReports(filesPaths)
+    def _unpackReportsDocs(self, filesPaths)->object:
+        convertedReports = self.feaReportsConverter.readFeaReports(filesPaths)
+        return convertedReports
 
 
     def _unpackExplanationDocs(self, filesPaths:list[str])->object:
         readedReports = {}
-
-        #TODO Set up here need to get propper json object output and structure
 
         try:
             for path in filesPaths:
@@ -70,8 +73,6 @@ class InputFilesLoader:
 
                         readedReports[file_name] = raw_file_data
                         number +=1
-
-
 
         except Exception as e:
             print(e)

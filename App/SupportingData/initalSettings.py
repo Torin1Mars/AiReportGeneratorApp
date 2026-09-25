@@ -10,6 +10,6 @@ FINAL_REPORT_LANGUAGES_VARIANTS = ["English", "Ukrainian", "Polish", "German"]
 
 #Ai setups
 CHAT_GPT_MODEL_NAME = "gpt-5.4-mini"
-CHAT_GPT_KEY = "AQ.Ab8RN6IDz53vFUlC9PcsMUHF1xTMJS7Q1ky3siZFhn3apoutIA"
+CHAT_GPT_KEY = ""
 CHAT_GPT_PREPARATION_TIME = 60  #In seconds
 CHAT_GPT_REPORT_GENERATION_TIME = 30  #In seconds
