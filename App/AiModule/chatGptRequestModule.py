@@ -13,8 +13,10 @@ class ChatGptRequestModule:
 
         self.aiClient = OpenAI(api_key = validApiKey)
 
-    def run_preparation_query(self, convertedFiles:str, allowingTime:int):
-        self._sendAiRequest("Hi to you !")
+    def run_preparation_query(self, convertedInputData:object, allowingTime:int):
+        #TODO need to setting up proper request
+        self._sendAiRequest(convertedInputData)
+
 
 
     def run_generating_report_query(self,initialPrompt:str, template:str,
@@ -22,14 +24,14 @@ class ChatGptRequestModule:
         #TODO later
         pass
 
-    def _sendAiRequest(self, userRequest:str)->str:
+    def _sendAiRequest(self, userSerializebleData:object)->str:
         try:
             print("Request has sent")
             # Send the question to the ChatCompletions endpoint
             response = self.aiClient.chat.completions.create(
                 model = self.currentModelName,
                 messages=[
-                    {"role": "user", "content": userRequest}
+                    {"role": "user", "content": userSerializebleData}
                 ]
             )
 

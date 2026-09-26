@@ -51,6 +51,7 @@ class TemplateLoader:
             stack[-1].children.append(node)
             stack.append(node)
 
+        print(root)
         return root
 
     def _nodeToJson(self, node: Node):

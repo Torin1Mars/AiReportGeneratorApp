@@ -52,13 +52,9 @@ class MainWindowLogic:
     async def _convertUserInputFiles (self):
         await self._inputFilesLoading()
 
-    async def _inputFilesLoading(self) -> list[list[str]]:
+    async def _inputFilesLoading(self) -> object:
 
-        convertedData = []
-
-        self.inputFilesLoader.loadInputFiles(self.templateFile, self.reportsFiles, self.explanationDocumentsFiles)
-
-        #convertedData.append([convertedTemplate, convertedFeaReports, convertedExplanation])
+        convertedData = self.inputFilesLoader.loadInputFiles(self.templateFile[0], self.reportsFiles, self.explanationDocumentsFiles)
         return convertedData
 
     def _showInformationMsg(self, msgText:str):
