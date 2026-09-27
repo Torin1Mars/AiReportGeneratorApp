@@ -19,7 +19,6 @@ class FeaReportsConverter:
         └── simulation mode
         └── monitor name → value"""
 
-
     def __init__(self):
         self.tables_to_extract = [
             "Materials",
@@ -349,9 +348,10 @@ class FeaReportsConverter:
                 img = element.find_next("img", class_="saved-scene")
                 imgData = img.get("src") if img else None
 
+                #TODO TEMPORARRY PLUG
                 scene = {
                     "name": name,
-                    "image": imgData
+                    "image": "imgData"
                 }
 
                 saved_scenes.append(scene)

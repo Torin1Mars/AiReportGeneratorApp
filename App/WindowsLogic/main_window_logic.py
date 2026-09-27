@@ -11,6 +11,8 @@ class MainWindowLogic:
         self.reportsFiles = None
         self.explanationDocumentsFiles = None
 
+        self.converted_user_data:object = None
+
         self.inputFilesLoader = InputFilesLoader()
         self.requestAiModule = ChatGptRequestModule(CHAT_GPT_KEY, CHAT_GPT_MODEL_NAME)
 
@@ -25,11 +27,11 @@ class MainWindowLogic:
         #Short input validation
         if len(self.templateFile) != 0 and len(self.reportsFiles) != 0:
             try:
-                convertedInputFiles = asyncio.run(asyncio.wait_for(
+                asyncio.run(asyncio.wait_for(
                     self._convertUserInputFiles(),
                     timeout=allowingDelay))
 
-                self._runPreparation(convertedInputFiles)
+                self._runPreparation(self.converted_user_data)
 
             except Exception as e:
                 self._showErrornMsg("Couldn't convert input files!")
@@ -43,17 +45,16 @@ class MainWindowLogic:
         #Short input validation
         pass
 
-    def _runPreparation(self, convertedInputs:list[list[str]]):
+    def _runPreparation(self, convertedInputs:object):
         self.requestAiModule.run_preparation_query(convertedInputs, CHAT_GPT_PREPARATION_TIME)
 
     def _runGeneration(self, basicPrompt:str, templateFile:str, preparedData:str, allowingTime:int):
         self.requestAiModule.run_generating_report_query(basicPrompt, templateFile, preparedData, allowingTime)
 
-    async def _convertUserInputFiles (self):
-        await self._inputFilesLoading()
+    async def _convertUserInputFiles (self)->None:
+        self.converted_user_data =  await self._inputFilesLoading()
 
     async def _inputFilesLoading(self) -> object:
-
         convertedData = self.inputFilesLoader.loadInputFiles(self.templateFile[0], self.reportsFiles, self.explanationDocumentsFiles)
         return convertedData
 

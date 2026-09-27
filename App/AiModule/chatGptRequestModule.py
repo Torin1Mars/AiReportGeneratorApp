@@ -13,11 +13,9 @@ class ChatGptRequestModule:
 
         self.aiClient = OpenAI(api_key = validApiKey)
 
-    def run_preparation_query(self, convertedInputData:object, allowingTime:int):
-        #TODO need to setting up proper request
-        self._sendAiRequest(convertedInputData)
-
-
+    def run_preparation_query(self, convertedInputData:object, allowingTime:int)->None:
+        respond = self._sendAiRequest(convertedInputData)
+        print(respond)
 
     def run_generating_report_query(self,initialPrompt:str, template:str,
                                     processedUserData:str, allowingRequestTime:int):
@@ -36,12 +34,7 @@ class ChatGptRequestModule:
             )
 
             # TODO need to extract Ai Answer from here
-
             return response.choices[0].message.content
-
 
         except Exception as e:
             print(e)
-
-
-
