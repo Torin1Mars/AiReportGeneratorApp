@@ -1,7 +1,12 @@
+import base64
 import json
-import sys
+import os
 
+from pathlib import Path
 from bs4 import BeautifulSoup
+
+from App.SupportingData.initalSettings import TEMP_TARGET_FOLDER
+
 
 class FeaReportsConverter:
     """Parser schema:
@@ -32,10 +37,12 @@ class FeaReportsConverter:
         for path in filesPaths:
             with open(path, "r", encoding="utf-8") as file:
                 html = file.read()
-                parsedTables = self._parse_tables(html, self.tables_to_extract)
+
+                file_name = Path(path).stem
+                parsedTables = self._parse_tables(file_name, html, self.tables_to_extract)
 
                 #Adding Scenes
-                parsedTables["Scenes"] = self._parse_scenes(html)
+                parsedTables["Scenes"] = self._parse_scenes(html, file_name)
 
                 jsonOutput = json.dumps(parsedTables, indent=4,ensure_ascii=False)
                 reportsInJson.append(jsonOutput)
@@ -167,7 +174,6 @@ class FeaReportsConverter:
                     )
 
             # Table belonging to current monitor
-
             elif (element.name == "table" and current_monitor is not None):
                 rows = element.find_all("tr")
 
@@ -223,7 +229,6 @@ class FeaReportsConverter:
                 # }
 
                 for index, header in enumerate(headers):
-
                     # "Design" is not a simulation mode
                     if header.lower() == "design":
                         continue
@@ -240,14 +245,13 @@ class FeaReportsConverter:
         return monitors
 
     # Main parser
-    def _parse_tables(self, html:str, tables_to_extract:list[str])->dict:
+    def _parse_tables(self,file_name:str, html:str, tables_to_extract:list[str])->dict:
 
         soup = BeautifulSoup(html, "html.parser")
         output = {}
 
-        # Report Id
-        report_id = None
-
+        # Report source name, simulation Id
+        output["Source file"] = file_name
         output["Report Id"] = self._found_report_id(soup)
 
         for requested_name in tables_to_extract:
@@ -326,7 +330,7 @@ class FeaReportsConverter:
                     break
         return id
 
-    def _parse_scenes(self, html:str)->list:
+    def _parse_scenes(self, html:str, simulationTitle:str)->list:
         soup = BeautifulSoup(html, "html.parser")
 
         saved_scenes = []
@@ -342,17 +346,42 @@ class FeaReportsConverter:
                 break
 
             if element.name == "h4":
-                name = element.get_text()
+                sceneName = element.get_text()
 
                 # The scene image
                 img = element.find_next("img", class_="saved-scene")
                 imgData = img.get("src") if img else None
 
-                #TODO TEMPORARRY PLUG
+                savedImgPath = self._saveBase64Img(imgData, simulationTitle, sceneName, TEMP_TARGET_FOLDER)
+
+                clearImgPath = savedImgPath.replace("\\", "/")
+                formatedPath = f"file:///{clearImgPath}"
+
                 scene = {
-                    "name": name,
-                    "image": "imgData"
+                    "Scene name": sceneName,
+                    "src": formatedPath,
+                    "alt": sceneName
                 }
 
                 saved_scenes.append(scene)
         return saved_scenes
+
+    def _saveBase64Img(self, base64Src:str, simulationName:str, imgFileName:str, targetFolder:str)->str:
+        # Ensure folder exists
+        os.makedirs(targetFolder, exist_ok=True)
+
+        # Remove "data:image/png;base64," prefix
+        if "," in base64Src:
+            base64Src = base64Src.split(",", 1)[1]
+
+        image_data = base64.b64decode(base64Src)
+
+        sceneName = imgFileName.split(",", 1)[0]
+        fileName = f"{simulationName}_{sceneName}.png"
+
+        fullPath = os.path.join(targetFolder,  fileName)
+
+        with open(fullPath, "wb") as f:
+            f.write(image_data)
+
+        return fullPath

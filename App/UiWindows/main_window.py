@@ -29,6 +29,9 @@ class MainWindow(QWidget):
         self._setup_screen()
         self._build_ui()
 
+        self.settings_window = SettingsWindow(self)
+        self.settings_window.hide()
+
     def _setup_screen(self):
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
@@ -62,8 +65,10 @@ class MainWindow(QWidget):
         layout.addWidget(self._build_section_title("AI generation:"))
         layout.addWidget(self._build_generation_group())
 
+        #Generate button
         generate_button = QPushButton("Generate report")
         generate_button.setObjectName("PrimaryButton")
+        generate_button.clicked.connect(self._runReportGeneration)
         layout.addWidget(generate_button)
 
     def _build_header(self):
@@ -150,7 +155,7 @@ class MainWindow(QWidget):
         self.generation_clear_button = QPushButton("\u2715")
         self.generation_clear_button.setObjectName("ClearButton")
         self.generation_clear_button.setFixedSize(30, 30)
-        #self.generation_clear_button.clicked.connect(self.handle_generation_clear_clicked)
+        self.generation_clear_button.clicked.connect(self.handle_generation_clear_clicked)
 
         top_row.addWidget(number_badge)
         top_row.addWidget(title_label, 1)
@@ -177,8 +182,7 @@ class MainWindow(QWidget):
         return group
 
     def handle_settings_clicked(self):
-        settings_window = SettingsWindow(self)
-        settings_window.exec()
+        self.settings_window.show()
 
     def handle_close_clicked(self):
         self.close()
@@ -204,5 +208,11 @@ class MainWindow(QWidget):
                                              self.reports_row.selected_files,
                                              self.explanations_row.selected_files)
 
-        self.mainWindowLogic.runPreperationStage(allowingDelay=60)
+        self.mainWindowLogic.prepareUserInputs()
 
+    def _runReportGeneration(self):
+        prompt:str = self.prompt_input.toPlainText()
+        report_language:str = self.language_combo.currentText()
+        report_style:str = self.settings_window.get_current_settings().current_report_style
+
+        self.mainWindowLogic.runReportGeneration(prompt, report_language, report_style)

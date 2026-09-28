@@ -197,5 +197,4 @@ QRadioButton#StyleRadio::indicator:checked {
     border: 1.5px solid #4ade80;
     background-color: #4ade80;
 }
-
 """

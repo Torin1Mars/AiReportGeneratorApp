@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import docx
 
 from App.domain.TemplateLoader import TemplateLoader
 from App.domain.feaReportsConverter import FeaReportsConverter
@@ -15,7 +16,7 @@ class InputFilesLoader:
 
     def loadInputFiles (self, template_filePath:str,
                         reports_filesPaths:list[list[str]],
-                        explanation_filesPaths:list[list[str]])->object:
+                        explanation_filesPaths:list[str])->object:
 
         if template_filePath:
             try:
@@ -33,7 +34,7 @@ class InputFilesLoader:
 
         if explanation_filesPaths:
             try:
-                self.convertedAdditionalDocs = self._unpackExplanationDocs(explanation_filesPaths)
+                self.convertedAdditionalDocs = self._unpackAditionalDocs(explanation_filesPaths)
             except Exception as e:
                 print("Couldn't load additional files")
                 print(e)
@@ -53,29 +54,28 @@ class InputFilesLoader:
         convertedReports = self.feaReportsConverter.readFeaReports(filesPaths)
         return convertedReports
 
-    def _unpackExplanationDocs(self, filesPaths:list[str])->object:
-        readedReports = {}
+    def _unpackAditionalDocs(self, filesPaths:list[str])->object:
+        readedDocs = {}
 
-        try:
-            for path in filesPaths:
-                number = 1
+        #Reading docx file as string
+        for path in filesPaths:
+            try:
+                docName:str = Path(path).stem
+                doc = docx.Document(path)
+                paragraphs_text = [p.text for p in doc.paragraphs]
 
-                with open(path, "r", encoding="utf-8") as file:
-                    raw_file_data = file.read()
-                    file_name = Path(path).stem
+                data  = "\n".join(paragraphs_text)
 
-                    if raw_file_data:
-                        data = {
-                            "filename": file_name,
-                            "content": raw_file_data
-                        }
+                currentDoc :dict = {}
+                currentDoc["Document"] = docName
+                currentDoc["Document data"] = data
 
-                        readedReports[file_name] = raw_file_data
-                        number +=1
+                readedDocs[docName] = currentDoc
 
-        except Exception as e:
-            print(e)
+            except Exception as e:
+                print(f"Reding error: {e}")
 
-        jsonOutput = json.dumps(readedReports, indent=4,ensure_ascii=False)
+        aditionalDocs:dict = {"Additional documents": readedDocs}
+        jsonOutput = json.dumps(aditionalDocs, indent=4,ensure_ascii=False)
 
         return jsonOutput

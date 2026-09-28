@@ -3,7 +3,6 @@ from tokenize import String
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QFileDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget, QFrame
 
-
 class FileInputRow(QWidget):
     """Reusable row for a single Preparation field: number badge, title,
     browse/add button, clear button, selected-file list and status label."""
@@ -58,7 +57,7 @@ class FileInputRow(QWidget):
         bottom_row.addWidget(self.files_label, 1)
         bottom_row.addWidget(self.status_label)
 
-        # divider line
+        #divider line
         field_divider = QFrame()
         field_divider.setObjectName("FieldDivider")
         field_divider.setFrameShape(QFrame.Shape.HLine)
@@ -79,7 +78,6 @@ class FileInputRow(QWidget):
             self.selected_files = files
             names = ", ".join(path.split("/")[-1] for path in files)
             self.files_label.setText(names)
-
 
     def handle_clear_clicked(self):
         self.selected_files = []

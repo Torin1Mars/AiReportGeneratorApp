@@ -16,11 +16,32 @@ from App.WindowsLogic.settings_window_logic import SettingsWindowLogic
 class SettingsWindow(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.logic = SettingsWindowLogic()
+
         self._drag_position = QPoint()
         self._setup_screen()
 
+        self.options = {
+            "Minimalistic": "Short report style, each chapter should have to 5 sentences size, key facts mostly",
+            "Normal": "Medium report style, each chapter should have min 5-10 describing sentences size based on key facts results",
+            "Expanded": "Expanded report style, each chapter should have 10 or more sentences based on key facts results and your personal observation opinion about obtained results, should include design advantages and disadvantages"
+            }
+
         self._build_ui()
+
+        self.logic = SettingsWindowLogic(key= GPT_KEY,
+                                         aiModelName=GPT_MODEL_NAME,
+                                         reportStyle= self._get_current_report_style_option())
+
+    def get_current_settings(self)->SettingsWindowLogic:
+        return self.logic
+
+    def _get_current_report_style_option(self)->str:
+        mode:str = ""
+
+        checkedButtonId = self.style_group.checkedId()
+        mode = list(self.options.values())[checkedButtonId]
+
+        return mode
 
     def _setup_screen(self):
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
@@ -96,13 +117,8 @@ class SettingsWindow(QDialog):
 
         self.style_group = QButtonGroup(self)
 
-        options = [
-            ("Minimalistic", "Short, key facts only"),
-            ("Normal", "Balanced detail and length"),
-            ("Expanded", "Full detail and explanations"),
-        ]
-
-        for index, (name, description) in enumerate(options):
+        index = 1
+        for option in self.options:
             option_frame = QFrame()
             option_frame.setObjectName("StyleOption")
             option_layout = QHBoxLayout(option_frame)
@@ -110,14 +126,16 @@ class SettingsWindow(QDialog):
             radio_button = QRadioButton()
             radio_button.setObjectName("StyleRadio")
             if index == 1:
-                radio_button.setChecked(True)
+               radio_button.setChecked(True)
 
             text_layout = QVBoxLayout()
             text_layout.setSpacing(0)
-            name_label = QLabel(name)
+
+            name_label = QLabel(option)
             name_label.setObjectName("StyleName")
-            description_label = QLabel(description)
+            description_label = QLabel(self.options[option])
             description_label.setObjectName("StyleDescription")
+
             text_layout.addWidget(name_label)
             text_layout.addWidget(description_label)
 
@@ -126,6 +144,7 @@ class SettingsWindow(QDialog):
 
             self.style_group.addButton(radio_button, index)
             layout.addWidget(option_frame)
+            index +=1
 
         return layout
 
