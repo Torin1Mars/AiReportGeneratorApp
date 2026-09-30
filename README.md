@@ -1,6 +1,6 @@
-# AiReportGeneratorApp
+# Ai Report Generator App
 A desktop application that turns source Ansys html generated files reports <br>
-into a structured general wide report with the help of AI <br>
+into one structured general wide report with the help of AI <br>
 
 ## Basic guide: <br>
 In the beginning we have Ansys .html report files after simulations <br>
@@ -11,10 +11,11 @@ In the beginning we have Ansys .html report files after simulations <br>
  Choose the style in Settings<br>
  - Press Generate report and follow the status line until the <br>
 finished report is ready <br>
- - Menu window <br>
+
+### Main window: <br>
   ![Main_window](https://github.com/Torin1Mars/AiReportGeneratorApp/blob/main/App/screnshots/mainScreen.jpg)
  
-- Settings window <br>   
+### Settings window: <br>
   ![Settings_menu](https://github.com/Torin1Mars/AiReportGeneratorApp/blob/main/App/screnshots/settingsScreen.jpg)
 
 ## Input data variate : 
