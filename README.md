@@ -1,80 +1,36 @@
 # AiReportGeneratorApp
-Ai app for automation company reports preporation
+Ai app for automation company reports preparation
 
+## Special thanks to: <br>
+*"Clear Code" project and all their teams:* <br>
+ 
+*"TILED" project and all their teams:* <br>
+-https://www.mapeditor.org <br>
+## YouTube link : 
+-https://www.youtube.com/watch?v=r4wL8PqAl8E
+## Game includes:
+ - Start window
+  ![Main_window](https://github.com/Torin1Mars/AiReportGeneratorApp/blob/main/App/screnshots/mainScreen.jpg)
+ 
+ - Menu window
+  ![Settings_menu](https://github.com/Torin1Mars/AiReportGeneratorApp/blob/main/App/screnshots/settingsScreen.jpg)
 
-<!DOCTYPE html>
-<html lang="en"><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>About</title><style>
-*{box-sizing:border-box}body{margin:0;background:#050806;color:#eaf2ec;font:14px/1.55 "Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;gap:40px;padding:28px 16px}
-h1{margin:0}h2{margin:0}p{margin:0;color:#8fae9c}b{color:#eaf2ec;font-weight:500}.dim{color:#5b7568;font-size:12px}
-/* Variant 1: panels */
-.v1{width:100%;max-width:560px;background:#0a0f0c;border:1px solid #1c2b22;border-radius:20px;padding:22px}
-.v1 h1{font-size:20px;font-weight:500}.v1 h2{font-size:12px;font-weight:500;color:#5fd68c;margin-bottom:8px}
-.v1 .head{display:flex;align-items:center;gap:10px;margin-bottom:18px}.v1 .ic{width:30px;height:30px;border-radius:8px;background:#12241a;border:1px solid #2e6b47;color:#4ade80;display:grid;place-items:center}
-.v1 .panel{background:#0c110e;border:2px solid #182620;border-radius:16px;padding:12px;margin-bottom:14px}
-.v1 .row{display:flex;gap:12px;padding:8px 0;align-items:flex-start}.v1 .n{flex:none;width:26px;height:26px;border-radius:8px;background:#132a1c;border:1px solid #2e6b47;color:#4ade80;display:grid;place-items:center;font-size:12px}
-.v1 .btn{display:block;text-align:center;border-radius:12px;padding:11px;font-weight:700;margin-top:6px}.v1 .g{background:#1f7a4c;color:#eafff2}.v1 .bl{background:#22436e;color:#e7eefc}
-.v1 footer{display:flex;justify-content:space-between;margin-top:6px}
-/* Settings window illustration */
-.mock{margin-top:12px;background:#0a0f0c;border:1px solid #1c2b22;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:8px;user-select:none}
-.mock .mh{display:flex;justify-content:space-between;align-items:center;color:#eaf2ec;font-size:15px;font-weight:500}
-.mock .x{width:26px;height:26px;border:1px solid #23392c;border-radius:9px;color:#8fae9c;display:grid;place-items:center;font-size:12px}
-.mock .fl{color:#7f9689;font-size:11px}
-.mock .in{background:#0e1512;border:1px solid #23392c;border-radius:9px;color:#5b7568;font-size:12px;padding:9px}
-.mock .in.val{color:#eaf2ec}
-.mock .opt{display:flex;gap:10px;align-items:center;background:#0e1512;border:1px solid #23392c;border-radius:10px;padding:8px 10px}
-.mock .rd{flex:none;width:14px;height:14px;border-radius:50%;border:1.5px solid #3a5245}
-.mock .rd.on{border-color:#4ade80;background:#4ade80}
-.mock .on-t{font-size:12px;color:#eaf2ec;line-height:1.3}.mock .on-t span{display:block;font-size:10px;color:#5b7568}
-.mock .foot{display:flex;gap:10px;margin-top:6px}
-.mock .foot span{flex:1;text-align:center;border-radius:10px;padding:9px;font-size:12px}
-.mock .cn{border:1px solid #23392c;color:#8fae9c}.mock .sv{background:#1f7a4c;color:#eafff2;border-radius:12px}
-.cap{margin-top:8px;font-size:12px;color:#5b7568}
-/* Variant 2: timeline */
-.v2{width:100%;max-width:560px}
-.v2 h1{font-size:26px;font-weight:600;margin-bottom:4px}.v2 .sub{margin-bottom:26px}
-.v2 ol{list-style:none;margin:0;padding:0 0 0 22px;border-left:2px solid #182620}
-.v2 li{position:relative;padding:0 0 22px 18px}.v2 li::before{content:"";position:absolute;left:-30px;top:5px;width:12px;height:12px;border-radius:50%;background:#0a0f0c;border:2px solid #4ade80}
-.v2 li.last::before{background:#4ade80}.v2 li h2{font-size:15px;font-weight:500;color:#eaf2ec}
-.v2 .tag{display:inline-block;border:1px solid #2e6b47;color:#5fd68c;border-radius:9px;padding:1px 9px;font-size:12px}
-.v2 footer{margin-top:10px;padding-top:14px;border-top:1px solid #182620;display:flex;justify-content:space-between}
-</style></head><body><h1>Report generator guideline</h1>
+## Additional: 
+ <ul>
+    <li>In game you can save and load game progress</li>    
+    <li>In game you can change sound settings and game dificulty</li>
+    <li>Your settings will be loaded with your game progress too</li>
+</ul>
 
-<section class="v2">
-<h1>Report generator workflow :</h1><p class="sub">From your files to a finished report in five steps</p>
-<ol>
-<li><h2>Pick a template</h2><p>The file that sets the report's structure.</p></li>
-<li><h2>Add reports and explanation docs</h2><p>Reports are what gets analysed; explanation docs give context.</p></li>
-<li><h2>Prepare data</h2><p>Reads and packs your files for the AI.</p></li>
-<li><h2>Set up generation</h2><p>Add a prompt, choose the language. Open <span class="tag">⚙</span> to set the API key, model and style.</p></li>
-<li class="last"><h2>Generate report</h2><p>Follow progress in the status line.</p></li>
-</ol>
+  ## Usage:
+<ul>
+    <li>As ordinary game</li>
+    <li>As game engine</li>
+    <li>As reference for another game</li>
+</ul>
 
-</section><section class="v1">
-<div class="head"><div class="ic">ⓘ</div><h1>How it works</h1></div>
-<h2>Preparation:</h2><div class="panel">
-<div class="row"><div class="n">1</div><p><b>Report template</b><br>Choose ONE file that defines the report structure, input file format .txt</p></div>
-<div class="row"><div class="n">2</div><p><b>User reports</b><br>You can pick several Ansys reports to analyse, input files format .html</p></div>
-<div class="row"><div class="n">3</div><p><b>Explanation docs</b><br>Here you can put additional documents which will be added into final report without any formating, input files format .docx</p></div>
-<span class="btn bl">Prepare data</span></div>
-<h2>AI generation:</h2><div class="panel">
-<div class="row"><div class="n">4</div><p><b>Report generation setup</b><br>Write an optional prompt and pick the report language. Use ✕ button to reset setup to default values.</p></div>
-<span class="btn g">Generate report (you should have all loaded input data before click)</span></div>
-<div class="panel"><p><b>⚙ Settings</b><br>Click the gear icon in the header. Enter your valid chatGpt API key and Gpt model name, choose output report style, then press Save.</p>
-<div class="mock" role="img" aria-label="Settings window: API key field, model name field, three report style options, Cancel and Save buttons">
-<div class="mh"><span>Settings</span><span class="x">✕</span></div>
-<div class="fl">AI API key :</div><div class="in">sk-...</div>
-<div class="fl">Model name :</div><div class="in val">gpt-4o</div>
-<div class="fl">Report generator style</div>
-<div class="opt"><span class="rd on"></span><div class="on-t">Minimalistic<span>Short, up to 5 sentences per chapter</span></div></div>
-<div class="opt"><span class="rd"></span><div class="on-t">Normal<span>Medium, 5–10 sentences per chapter</span></div></div>
-<div class="opt"><span class="rd"></span><div class="on-t">Expanded<span>Detailed, 10+ sentences with observations</span></div></div>
-<div class="foot"><span class="cn">Cancel</span><span class="sv">Save</span></div></div>
-</div>
+  ## What was used:
+<ul>
+    <li>PYTHON</li>
+    <li>PYgame</li>
 
-</section>
-
-
-
-
-</body></html>
