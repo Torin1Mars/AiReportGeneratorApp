@@ -1,17 +1,22 @@
 import json
+import os
+import shutil
 from pathlib import Path
 import docx
 
-from App.domain.TemplateLoader import TemplateLoader
-from App.domain.feaReportsConverter import FeaReportsConverter
+from App.Domain.TemplateLoader import TemplateLoader
+from App.Domain.feaReportsConverter import FeaReportsConverter
+from App.supportingData.settingsManager import SettingsManager
 
 class InputFilesLoader:
-    def __init__(self):
+    def __init__(self, settings:SettingsManager):
+        self.appSettings = settings
+
         self.convertedTemplate:object = None
         self.convertedReports:object = None
         self.convertedAdditionalDocs:object = None
 
-        self.feaReportsConverter = FeaReportsConverter()
+        self.feaReportsConverter = FeaReportsConverter(self.appSettings)
         self.templateLoader = TemplateLoader()
 
     def loadInputFiles (self, template_filePath:str,
@@ -51,6 +56,20 @@ class InputFilesLoader:
         return convertedTemplate
 
     def _unpackReportsDocs(self, filesPaths)->object:
+
+        targetPath = Path(self.appSettings.TARGET_FOLDER)
+
+        if targetPath.is_dir():
+            #Erase target folder
+            for item in Path(self.appSettings.TARGET_FOLDER).iterdir():
+                if item.is_file():
+                    item.unlink()
+                elif item.is_dir():
+                    shutil.rmtree(item)
+        else:
+            #Create new target folder
+            os.makedirs(targetPath, exist_ok=True)
+
         convertedReports = self.feaReportsConverter.readFeaReports(filesPaths)
         return convertedReports
 

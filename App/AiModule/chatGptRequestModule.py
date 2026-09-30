@@ -1,16 +1,19 @@
 import os
 import webbrowser
+from datetime import datetime
+from string import Template
+
 import openai
 
 from openai import OpenAI
 from openai.types.chat import ChatCompletion
-
-from App.SupportingData.initalSettings import GPT_REPORT_GENERATION_TIME, GPT_PROMPT_SYSTEM_INITIAL, \
-    GPT_PROMPT_SYSTEM_ROLE_EXPLANATION, TEMP_TARGET_FOLDER
+from App.supportingData.settingsManager import SettingsManager
 
 class ChatGptRequestModule:
-    def __init__(self, validApiKey:str, modelName: str, ):
+    def __init__(self, validApiKey:str, modelName: str, settings:SettingsManager):
         super().__init__()
+
+        self.appSettings = settings
 
         #Ai client
         self.currentApiKey = validApiKey
@@ -18,13 +21,13 @@ class ChatGptRequestModule:
 
         self.aiClient = OpenAI(api_key = validApiKey)
 
-    def run_generating_report_query(self,userData:object, user_prompt:str, reportLanguage:str, reportStyle:str)->None:
+    def run_generating_report_query(self, userData:object, user_prompt:str, reportLanguage:str, reportStyle:str)->None:
         try:
-            ok = userData
+            print("Query have been sent!")
             respond = self._sendAiRequest(userData, user_prompt, reportLanguage,reportStyle)
 
             #Succes response
-            self._processAiRespond(respond)
+            self._processAiRespond(respond, reportLanguage)
 
         except openai.APIConnectionError as e:
             print(f"Network error: {e}")
@@ -41,19 +44,17 @@ class ChatGptRequestModule:
 
     def _sendAiRequest(self, userSerializebleData:object, aditionalPrompt:str, reportLanguage:str, reportStyle:str )->ChatCompletion:
         try:
-            print("Request has been sent")
-
             # Send the question to the ChatCompletions endpoint
             response:ChatCompletion = self.aiClient.chat.completions.create(
                 model = self.currentModelName,
                 messages=[
-                    {"role": "system", "content": GPT_PROMPT_SYSTEM_INITIAL},
+                    {"role": "system", "content": self.appSettings.GPT_PROMPT_SYSTEM_INITIAL},
                     {"role": "system", "content": reportStyle},
-                    {"role": "system", "content": reportLanguage},
+                    {"role": "system", "content": "Output report file language: " + reportLanguage},
 
                     {"role": "user", "content": userSerializebleData},
 
-                    {"role": "assistant", "content": GPT_PROMPT_SYSTEM_ROLE_EXPLANATION},
+                    {"role": "assistant", "content": self.appSettings.GPT_PROMPT_SYSTEM_ROLE_EXPLANATION},
 
                     {"role": "user", "content": aditionalPrompt}
                 ])
@@ -62,11 +63,17 @@ class ChatGptRequestModule:
         except Exception as e:
             print(e)
 
-    def _processAiRespond(self, respond:ChatCompletion)->None:
+    def _processAiRespond(self, respond:ChatCompletion, outputReportLanguage)->None:
+        now = datetime.now()
+        date_string = now.strftime("%d-%m-%Y_%H-%M")
+
+        report_name_tmpl = Template(self.appSettings.report_name_template)
+        current_report_name = report_name_tmpl.substitute(time= date_string, lang = outputReportLanguage)
+
         data = respond.choices[0].message.content
 
-        targetFolder = TEMP_TARGET_FOLDER
-        fileName = f"Report_.html"
+        targetFolder = self.appSettings.TARGET_FOLDER
+        fileName = current_report_name
 
         fullPath = os.path.join(targetFolder,  fileName)
 

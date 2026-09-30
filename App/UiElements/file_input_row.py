@@ -1,5 +1,3 @@
-from tokenize import String
-
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QFileDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget, QFrame
 
@@ -51,11 +49,11 @@ class FileInputRow(QWidget):
         self.files_label = QLabel("No files selected")
         self.files_label.setObjectName("FilesLabel")
 
-        self.status_label = QLabel("Status: not started")
-        self.status_label.setObjectName("StatusLabel")
+        #self.status_label = QLabel("Status: not started")
+        #self.status_label.setObjectName("StatusLabel")
+        #bottom_row.addWidget(self.status_label)
 
         bottom_row.addWidget(self.files_label, 1)
-        bottom_row.addWidget(self.status_label)
 
         #divider line
         field_divider = QFrame()
@@ -82,4 +80,4 @@ class FileInputRow(QWidget):
     def handle_clear_clicked(self):
         self.selected_files = []
         self.files_label.setText("No files selected")
-        self.status_label.setText("Status: not started")
+        #self.status_label.setText("Status: not started")

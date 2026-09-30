@@ -1,4 +1,10 @@
+import os.path
+import webbrowser
+from pathlib import Path
+from tkinter import messagebox
+
 from PyQt6.QtCore import QPoint, Qt
+from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -11,25 +17,32 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from App.SupportingData.initalSettings import *
+from App.additional import APP_VERSION, APP_NAME, get_resource_path
+from App.supportingData.settingsManager import SettingsManager
 from App.UiElements.file_input_row import FileInputRow
 from App.WindowsLogic.main_window_logic import MainWindowLogic
 from App.UiWindows.settings_window import SettingsWindow
 
 class MainWindow(QWidget):
-    def __init__(self):
+    def __init__(self, currentAppPath:Path):
         super().__init__()
+        self.thisAppPath = currentAppPath
+        self.currentSettings  = SettingsManager(self.thisAppPath)
 
         #Logic
         #With using lateinit
-        self.mainWindowLogic = MainWindowLogic()
+        self.mainWindowLogic = MainWindowLogic(self.currentSettings)
 
         #Ui
         self._drag_position = QPoint()
         self._setup_screen()
-        self._build_ui()
 
-        self.settings_window = SettingsWindow(self)
+        self._build_ui()
+        self.mainWindowLogic.appIndicator = self.generation_status_label
+
+        #Settings
+        self.settings_window = SettingsWindow(self.currentSettings, self)
+
         self.settings_window.hide()
 
     def _setup_screen(self):
@@ -37,12 +50,12 @@ class MainWindow(QWidget):
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
         #Window size
-        self.setFixedSize(MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT)
+        self.setFixedSize(self.currentSettings.MAIN_WINDOW_WIDTH, self.currentSettings.MAIN_WINDOW_HEIGHT)
 
         #Starting position
         screen_geometry = QApplication.primaryScreen().availableGeometry()
-        start_width = int((screen_geometry.width()-MAIN_WINDOW_WIDTH) * 0.5)
-        start_height = int((screen_geometry.height()-MAIN_WINDOW_HEIGHT) * 0.5)
+        start_width = int((screen_geometry.width()-self.currentSettings.MAIN_WINDOW_WIDTH) * 0.5)
+        start_height = int((screen_geometry.height()-self.currentSettings.MAIN_WINDOW_HEIGHT) * 0.5)
         self.move(start_width, start_height)
 
     def _build_ui(self):
@@ -71,21 +84,30 @@ class MainWindow(QWidget):
         generate_button.clicked.connect(self._runReportGeneration)
         layout.addWidget(generate_button)
 
+        #DevBy section
+        layout.addLayout(self._build_bottom_layout())
+
     def _build_header(self):
         header_layout = QHBoxLayout()
 
-        icon_label = QLabel("\U0001F4C4")
+        '''icon_label = QLabel("\U0001F4C4")
         icon_label.setObjectName("AppIcon")
         icon_label.setFixedSize(30, 30)
-        icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)'''
 
-        title_label = QLabel("Report generator")
+        image_label = QLabel()
+        #image_label.setPixmap(QPixmap("assets/app_icon_32.png"))
+
+        iconPath = get_resource_path("assets/app_icon_32.png")
+        image_label.setPixmap(QPixmap(str(iconPath)))
+
+        title_label = QLabel(APP_NAME)
         title_label.setObjectName("AppTitle")
 
         self.about_button = QPushButton("\u24D8")
         self.about_button.setObjectName("IconButton")
         self.about_button.setFixedSize(30, 30)
-        # About button intentionally left without a handler.
+        self.about_button.clicked.connect(self._openAboutFile)
 
         self.settings_button = QPushButton("\u2699")
         self.settings_button.setObjectName("IconButton")
@@ -97,13 +119,28 @@ class MainWindow(QWidget):
         self.close_button.setFixedSize(30, 30)
         self.close_button.clicked.connect(self.handle_close_clicked)
 
-        header_layout.addWidget(icon_label)
+        header_layout.addWidget(image_label)
         header_layout.addWidget(title_label)
         header_layout.addStretch(1)
         header_layout.addWidget(self.about_button)
         header_layout.addWidget(self.settings_button)
         header_layout.addWidget(self.close_button)
         return header_layout
+
+    def _build_bottom_layout(self):
+        bottom_layout = QHBoxLayout()
+
+        status_label = QLabel("Dev by: SkodaUa team")
+        status_label.setObjectName("DevLabel")
+
+        info_label = QLabel(APP_VERSION)
+        info_label.setObjectName("DevLabel")
+
+        bottom_layout.addWidget(status_label)
+        bottom_layout.addStretch()
+        bottom_layout.addWidget(info_label)
+
+        return bottom_layout
 
     def _build_section_title(self, text):
         label = QLabel(text)
@@ -164,11 +201,10 @@ class MainWindow(QWidget):
         self.prompt_input = QTextEdit()
         self.prompt_input.setObjectName("PromptInput")
         self.prompt_input.setPlaceholderText("Additional prompt for the AI...")
-        self.prompt_input.setFixedHeight(70)
 
         self.language_combo = QComboBox()
         self.language_combo.setObjectName("LanguageCombo")
-        self.language_combo.addItems(FINAL_REPORT_LANGUAGES_VARIANTS)
+        self.language_combo.addItems(self.currentSettings.REPORT_LANGUAGES_VARIANTS)
 
         self.generation_status_label = QLabel("Status: not started")
         self.generation_status_label.setObjectName("StatusLabel")
@@ -190,7 +226,7 @@ class MainWindow(QWidget):
     def handle_generation_clear_clicked(self):
         self.prompt_input.clear()
         self.language_combo.setCurrentIndex(0)
-        self.generation_status_label.setText("Status: not started")
+        #self.generation_status_label.setText("Status: not started")
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
@@ -215,4 +251,20 @@ class MainWindow(QWidget):
         report_language:str = self.language_combo.currentText()
         report_style:str = self.settings_window.get_current_settings().current_report_style
 
-        self.mainWindowLogic.runReportGeneration(prompt, report_language, report_style)
+        self.mainWindowLogic.runReportGeneration(prompt, report_language, report_style, self.changeAppStatus)
+
+    def _openAboutFile(self):
+        try:
+            diePath = self.thisAppPath
+            fileName = "about.html"
+            fullPath = os.path.join(diePath, fileName)
+
+            webbrowser.open(fullPath)
+
+        except Exception as e:
+            messagebox.showerror("Pay Attention!", "Couldn't found About file!")
+            print(e)
+
+    def changeAppStatus(self, newStatus):
+        self.generation_status_label.setText(newStatus)
+        QApplication.processEvents()

@@ -95,7 +95,13 @@ QLabel#FilesLabel {
 
 QLabel#StatusLabel {
     color: #5b7568;
-    font-size: 10px;
+    font-size: 14px;
+}
+
+QLabel#DevLabel {
+    color: #5b7568;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 QTextEdit#PromptInput {
@@ -116,13 +122,25 @@ QComboBox#LanguageCombo {
     padding: 8px;
 }
 
-QPushButton#PrimaryButton {
+QPushButton#PrimarySettingsButton {
     background-color: #1f7a4c;
     border: none;
     border-radius: 12px;
     color: #eafff2;
     font-size: 13px;
-    font-weight: 500;
+    padding: 12px;
+}
+QPushButton#PrimarySettingsButton:hover {
+    background-color: #23935a;
+}
+
+QPushButton#PrimaryButton {
+    background-color: #1f7a4c;
+    border: none;
+    border-radius: 12px;
+    color: #eafff2;
+    font-size: 16px;
+    font-weight: bold;
     padding: 12px;
 }
 QPushButton#PrimaryButton:hover {
@@ -134,8 +152,8 @@ QPushButton#SecondaryButton {
     border: none;
     border-radius: 12px;
     color: #e7eefc;
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: bold;
     padding: 11px;
 }
 

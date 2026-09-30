@@ -10,12 +10,15 @@ from PyQt6.QtWidgets import (
     QRadioButton,
     QVBoxLayout, QApplication,
 )
-from App.SupportingData.initalSettings import *
+
+from App.supportingData.settingsManager import SettingsManager
 from App.WindowsLogic.settings_window_logic import SettingsWindowLogic
 
 class SettingsWindow(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, appSettings: SettingsManager, parent=None,):
         super().__init__(parent)
+
+        self.appSettings:SettingsManager = appSettings
 
         self._drag_position = QPoint()
         self._setup_screen()
@@ -28,9 +31,9 @@ class SettingsWindow(QDialog):
 
         self._build_ui()
 
-        self.logic = SettingsWindowLogic(key= GPT_KEY,
-                                         aiModelName=GPT_MODEL_NAME,
-                                         reportStyle= self._get_current_report_style_option())
+        self.logic = SettingsWindowLogic(key = self.appSettings.GPT_KEY,
+                                         aiModelName = self.appSettings.GPT_MODEL_NAME,
+                                         reportStyle = self._get_current_report_style_option())
 
     def get_current_settings(self)->SettingsWindowLogic:
         return self.logic
@@ -49,12 +52,12 @@ class SettingsWindow(QDialog):
         self.setModal(True)
 
         #Window size
-        self.setFixedSize(SETTINGS_WINDOW_WIDTH, SETTINGS_WINDOW_HEIGHT)
+        self.setFixedSize(self.appSettings.SETTINGS_WINDOW_WIDTH, self.appSettings.SETTINGS_WINDOW_HEIGHT)
 
         #Starting position
         screen_geometry = QApplication.primaryScreen().availableGeometry()
-        start_width = int((screen_geometry.width()-SETTINGS_WINDOW_WIDTH) * 0.5)
-        start_height = int((screen_geometry.height()-SETTINGS_WINDOW_HEIGHT) * 0.5)
+        start_width = int((screen_geometry.width()-self.appSettings.SETTINGS_WINDOW_WIDTH) * 0.5)
+        start_height = int((screen_geometry.height()-self.appSettings.SETTINGS_WINDOW_HEIGHT) * 0.5)
         self.move(start_width, start_height)
 
     def _build_ui(self):
@@ -71,17 +74,19 @@ class SettingsWindow(QDialog):
 
         layout.addLayout(self._build_header())
 
-        layout.addWidget(self._build_field_label("AI API key"))
+        layout.addWidget(self._build_field_label("AI API key :"))
         self.api_key_input = QLineEdit()
         self.api_key_input.setObjectName("SettingsInput")
-        self.api_key_input.setEchoMode(QLineEdit.EchoMode.Password)
+        #self.api_key_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.api_key_input.setPlaceholderText("sk-...")
+        self.api_key_input.setText(self.appSettings.GPT_KEY)
         layout.addWidget(self.api_key_input)
 
-        layout.addWidget(self._build_field_label("Model name"))
+        layout.addWidget(self._build_field_label("Model name :"))
         self.model_name_input = QLineEdit()
         self.model_name_input.setObjectName("SettingsInput")
         self.model_name_input.setPlaceholderText("e.g. gpt-4o")
+        self.model_name_input.setText(self.appSettings.GPT_MODEL_NAME)
         layout.addWidget(self.model_name_input)
 
         layout.addWidget(self._build_field_label("Report generator style"))
@@ -156,7 +161,7 @@ class SettingsWindow(QDialog):
         cancel_button.clicked.connect(self.handle_cancel_clicked)
 
         save_button = QPushButton("Save")
-        save_button.setObjectName("PrimaryButton")
+        save_button.setObjectName("PrimarySettingsButton")
         save_button.clicked.connect(self.handle_save_clicked)
 
         button_row.addWidget(cancel_button)

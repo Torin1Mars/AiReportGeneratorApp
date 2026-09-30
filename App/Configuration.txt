@@ -1,2 +1,0 @@
-CHAT_GPT_MODEL_NAME = "gpt-5.4-mini"
-CHAT_GPT_KEY = ""

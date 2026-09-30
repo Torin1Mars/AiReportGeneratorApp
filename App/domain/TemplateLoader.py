@@ -1,6 +1,5 @@
 import json
 
-
 class Node:
     __slots__ = ("depth", "key", "value", "children")
 

@@ -1,20 +1,27 @@
 import asyncio
 from tkinter import messagebox
 
+from PyQt6.QtWidgets import QLabel
+
 from App.AiModule.chatGptRequestModule import ChatGptRequestModule
-from App.domain.InputFilesLoader import InputFilesLoader
-from App.SupportingData.initalSettings import GPT_KEY, GPT_MODEL_NAME, PREPARATION_TIME_LIMIT
+from App.Domain.InputFilesLoader import InputFilesLoader
+from App.supportingData.settingsManager import SettingsManager
 
 class MainWindowLogic:
-    def __init__(self):
+    def __init__(self, settings:SettingsManager):
+        self.appSettings = settings
+
+        #App status indicator
+        self.appIndicator = None
+
         self.templateFile = None
         self.reportsFiles = None
         self.explanationDocumentsFiles = None
 
         self.converted_user_data:object = None
 
-        self.inputFilesLoader = InputFilesLoader()
-        self.requestAiModule = ChatGptRequestModule(GPT_KEY, GPT_MODEL_NAME)
+        self.inputFilesLoader = InputFilesLoader(self.appSettings)
+        self.requestAiModule = ChatGptRequestModule(self.appSettings.GPT_KEY, self.appSettings.GPT_MODEL_NAME, self.appSettings)
 
     def set_new_inputs (self, templateFile:list[str] = None, reportsFiles:list[str] = None, explanationDocumentsPaths:list[str]= None ):
         self.templateFile = templateFile
@@ -27,7 +34,7 @@ class MainWindowLogic:
         if len(self.templateFile) != 0 and len(self.reportsFiles) != 0:
             try:
                 asyncio.run(asyncio.wait_for(
-                    self._convertUserInputFiles(), timeout = PREPARATION_TIME_LIMIT))
+                    self._convertUserInputFiles(), timeout = self.appSettings.PREPARATION_TIME_LIMIT))
 
                 self._showInformationMsg("Input data has been successfully read!")
 
@@ -38,7 +45,9 @@ class MainWindowLogic:
         else:
             self._showWarningMsg("Input data has not been chosen!")
 
-    def runReportGeneration(self, user_prompt:str, user_report_language:str, user_report_style:str):
+    def runReportGeneration(self, user_prompt:str, user_report_language:str, user_report_style:str, changeAppStatus):
+
+        changeAppStatus("Status: working")
         userData = self.converted_user_data
 
         prompt = user_prompt
@@ -46,6 +55,8 @@ class MainWindowLogic:
         report_style = user_report_style
 
         self.requestAiModule.run_generating_report_query(userData, prompt, language, report_style)
+
+        changeAppStatus("Status: not started")
 
     async def _convertUserInputFiles (self)->None:
         self.converted_user_data =  await self._inputFilesLoading()

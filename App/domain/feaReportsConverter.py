@@ -4,9 +4,7 @@ import os
 
 from pathlib import Path
 from bs4 import BeautifulSoup
-
-from App.SupportingData.initalSettings import TEMP_TARGET_FOLDER
-
+from App.supportingData.settingsManager import SettingsManager
 
 class FeaReportsConverter:
     """Parser schema:
@@ -24,7 +22,10 @@ class FeaReportsConverter:
         └── simulation mode
         └── monitor name → value"""
 
-    def __init__(self):
+    def __init__(self, appSettings:SettingsManager):
+
+        self.applicationSettings = appSettings
+
         self.tables_to_extract = [
             "Materials",
             "Fidelity",
@@ -352,7 +353,9 @@ class FeaReportsConverter:
                 img = element.find_next("img", class_="saved-scene")
                 imgData = img.get("src") if img else None
 
-                savedImgPath = self._saveBase64Img(imgData, simulationTitle, sceneName, TEMP_TARGET_FOLDER)
+                folder = self.applicationSettings.TARGET_FOLDER
+
+                savedImgPath = self._saveBase64Img(imgData, simulationTitle, sceneName, self.applicationSettings.TARGET_FOLDER)
 
                 clearImgPath = savedImgPath.replace("\\", "/")
                 formatedPath = f"file:///{clearImgPath}"
@@ -367,8 +370,6 @@ class FeaReportsConverter:
         return saved_scenes
 
     def _saveBase64Img(self, base64Src:str, simulationName:str, imgFileName:str, targetFolder:str)->str:
-        # Ensure folder exists
-        os.makedirs(targetFolder, exist_ok=True)
 
         # Remove "data:image/png;base64," prefix
         if "," in base64Src:
