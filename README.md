@@ -1,36 +1,39 @@
 # AiReportGeneratorApp
-Ai app for automation company reports preparation
+A desktop application that turns source Ansys html generated files reports <br>
+into a structured general wide report with the help of AI <br>
 
-## Special thanks to: <br>
-*"Clear Code" project and all their teams:* <br>
- 
-*"TILED" project and all their teams:* <br>
--https://www.mapeditor.org <br>
-## YouTube link : 
--https://www.youtube.com/watch?v=r4wL8PqAl8E
-## Game includes:
- - Start window
+## Basic guide: <br>
+In the beginning we have Ansys .html report files after simulations <br>
+ - Choose the report template (you can prepare several template files and pick suitable when its need, <br>
+ your user reports and any explanation documents <br>
+ - Press Prepare data. The app reads the files and packs them for the AI <br>
+ - Type an optional prompt and select the language of the report <br>
+ Choose the style in Settings<br>
+ - Press Generate report and follow the status line until the <br>
+finished report is ready <br>
+ - Menu window <br>
   ![Main_window](https://github.com/Torin1Mars/AiReportGeneratorApp/blob/main/App/screnshots/mainScreen.jpg)
  
- - Menu window
+- Settings window <br>   
   ![Settings_menu](https://github.com/Torin1Mars/AiReportGeneratorApp/blob/main/App/screnshots/settingsScreen.jpg)
 
-## Additional: 
+## Input data variate : 
  <ul>
-    <li>In game you can save and load game progress</li>    
-    <li>In game you can change sound settings and game dificulty</li>
-    <li>Your settings will be loaded with your game progress too</li>
+    <li>Ansys Discovery Cfd .html reports</li>    
+    <li>Ansys Discovery Fea .html reports</li>
 </ul>
 
   ## Usage:
 <ul>
-    <li>As ordinary game</li>
-    <li>As game engine</li>
-    <li>As reference for another game</li>
+    <li>As automation reports preparation</li>
+    <li>As checking general project studies overview</li>
+    <li>As multiple languages report creator</li>
 </ul>
 
-  ## What was used:
+  ## What under hood:
 <ul>
-    <li>PYTHON</li>
-    <li>PYgame</li>
+    <li>Python parsers for report data collecting</li>
+    <li>Python logic for data processing</li>
+    <li>Qt6 Ui/Ux</li>
+    
 
